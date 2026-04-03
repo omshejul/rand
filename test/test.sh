@@ -19,7 +19,7 @@ assert "rand 16 should return 16 characters" test "${#output}" -eq 16
 assert "rand 16 should be alphanumeric only" bash -lc '[[ "$1" =~ ^[A-Za-z0-9]{16}$ ]]' _ "$output"
 
 help_output="$("$rand_cmd" --help)"
-assert "help should mention --version" grep -q -- "--version" <<<"$help_output"
+assert "help should mention -v" grep -q -- "  -v" <<<"$help_output"
 assert "help should mention clipboard" grep -q -- "Copy the generated string to the clipboard" <<<"$help_output"
 
 version_output="$("$rand_cmd" --version)"
