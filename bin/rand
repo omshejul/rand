@@ -2,7 +2,7 @@
 
 set -euo pipefail
 
-VERSION="${RAND_VERSION:-0.1.0}"
+VERSION="${RAND_VERSION:-0.1.2}"
 
 usage() {
     cat <<'EOF'
@@ -26,7 +26,7 @@ Examples:
   rand -c 24
     -> copies a 24-character random string to the clipboard
   rand -v
-    -> 0.1.0
+    -> 0.1.2
 EOF
 }
 

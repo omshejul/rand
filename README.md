@@ -76,7 +76,7 @@ Typical public setup:
 
 ```sh
 ./test/test.sh
-git tag v0.1.0
+git tag v0.1.2
 git push origin main --tags
 ```
 
@@ -85,7 +85,7 @@ Pushing a `v*` tag triggers the release workflow, which runs the test suite and 
 After the release is published, update the tap formula `sha256` with:
 
 ```sh
-curl -L https://github.com/omshejul/rand/archive/refs/tags/v0.1.0.tar.gz | shasum -a 256
+curl -L https://github.com/omshejul/rand/archive/refs/tags/v0.1.2.tar.gz | shasum -a 256
 ```
 
 ## License

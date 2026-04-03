@@ -23,7 +23,7 @@ assert "help should mention -v" grep -q -- "  -v" <<<"$help_output"
 assert "help should mention clipboard" grep -q -- "Copy the generated string to the clipboard" <<<"$help_output"
 
 version_output="$("$rand_cmd" --version)"
-assert "version should be 0.1.0" test "$version_output" = "0.1.0"
+assert "version should be 0.1.2" test "$version_output" = "0.1.2"
 
 tmpdir="$(mktemp -d)"
 trap 'rm -rf "$tmpdir"' EXIT
