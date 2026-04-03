@@ -13,7 +13,12 @@ Generate a random alphanumeric string.
 Options:
   -c         Copy the generated string to the clipboard
   -h         Show this help
+  --help     Show this help
+  -help      Show this help
+  help       Show this help
   -v         Show the version
+  --version  Show the version
+  version    Show the version
 
 Arguments:
   length     Length of the string to generate (default: 32)
@@ -25,6 +30,8 @@ Examples:
     -> A8dK2mQ7xP1rT9vB
   rand -c 24
     -> copies a 24-character random string to the clipboard
+  rand --version
+    -> 0.1.0
 EOF
 }
 

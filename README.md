@@ -1,5 +1,7 @@
 # rand
 
+[![CI](https://github.com/omshejul/rand/actions/workflows/ci.yml/badge.svg)](https://github.com/omshejul/rand/actions/workflows/ci.yml)
+
 `rand` is a small Bash command that generates random alphanumeric strings using `openssl`.
 
 ## Features
@@ -40,7 +42,15 @@ $ rand 16
 f7u18Jsf6gaR9LpQ
 ```
 
-## Local install
+## Install
+
+### Homebrew
+
+```sh
+brew install omshejul/tools/rand
+```
+
+### Local install
 
 ```sh
 install -m 0755 bin/rand ~/.local/bin/rand
@@ -62,12 +72,6 @@ Typical public setup:
 4. Copy the formula template into the tap as `Formula/rand.rb`.
 5. Replace the placeholder `sha256` in the formula with the release tarball checksum.
 
-User install command:
-
-```sh
-brew install omshejul/tools/rand
-```
-
 ## Release checklist
 
 ```sh
@@ -76,7 +80,9 @@ git tag v0.1.0
 git push origin main --tags
 ```
 
-After the release is published, update the `sha256` in the tap formula with:
+Pushing a `v*` tag triggers the release workflow, which runs the test suite and publishes a GitHub release automatically.
+
+After the release is published, update the tap formula `sha256` with:
 
 ```sh
 curl -L https://github.com/omshejul/rand/archive/refs/tags/v0.1.0.tar.gz | shasum -a 256
