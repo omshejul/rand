@@ -1,0 +1,129 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+VERSION="${RAND_VERSION:-0.1.0}"
+
+usage() {
+    cat <<'EOF'
+Usage: rand [-c] [length]
+
+Generate a random alphanumeric string.
+
+Options:
+  -c         Copy the generated string to the clipboard
+  -h         Show this help
+  -v         Show the version
+
+Arguments:
+  length     Length of the string to generate (default: 32)
+
+Examples:
+  rand
+    -> K7mP2xQ9nV4cR8tYb1Hd6Ls0Zw3AjF5N
+  rand 16
+    -> A8dK2mQ7xP1rT9vB
+  rand -c 24
+    -> copies a 24-character random string to the clipboard
+EOF
+}
+
+copy_to_clipboard() {
+    local value="$1"
+
+    if command -v pbcopy >/dev/null 2>&1; then
+        printf '%s' "$value" | pbcopy
+    elif command -v xclip >/dev/null 2>&1; then
+        printf '%s' "$value" | xclip -sel clip
+    elif command -v wl-copy >/dev/null 2>&1; then
+        printf '%s' "$value" | wl-copy
+    else
+        return 1
+    fi
+}
+
+print_version() {
+    printf '%s\n' "$VERSION"
+}
+
+if ! command -v openssl >/dev/null 2>&1; then
+    echo "rand: openssl is required" >&2
+    exit 1
+fi
+
+length=32
+to_clipboard=false
+
+for arg in "$@"; do
+    case "$arg" in
+        -h|--help|-help|help)
+            usage
+            exit 0
+            ;;
+        -v|--version|version)
+            print_version
+            exit 0
+            ;;
+    esac
+done
+
+while getopts ":chv" opt; do
+    case "$opt" in
+        c)
+            to_clipboard=true
+            ;;
+        h)
+            usage
+            exit 0
+            ;;
+        v)
+            print_version
+            exit 0
+            ;;
+        :)
+            echo "rand: option -$OPTARG requires a value" >&2
+            usage >&2
+            exit 1
+            ;;
+        \?)
+            echo "rand: invalid option -$OPTARG" >&2
+            usage >&2
+            exit 1
+            ;;
+    esac
+done
+
+shift $((OPTIND - 1))
+
+if [[ $# -gt 1 ]]; then
+    echo "rand: too many arguments" >&2
+    usage >&2
+    exit 1
+fi
+
+if [[ $# -eq 1 ]]; then
+    if [[ ! "$1" =~ ^[0-9]+$ ]] || [[ "$1" -le 0 ]]; then
+        echo "rand: length must be a positive integer" >&2
+        exit 1
+    fi
+    length="$1"
+fi
+
+random_str=""
+while [[ ${#random_str} -lt $length ]]; do
+    needed=$((length - ${#random_str}))
+    chunk="$(openssl rand -base64 $((needed * 2)) | LC_ALL=C tr -dc 'A-Za-z0-9')"
+    random_str+="$chunk"
+done
+random_str="${random_str:0:length}"
+
+if [[ "$to_clipboard" == true ]]; then
+    if copy_to_clipboard "$random_str"; then
+        echo "Copied $length-char random string to clipboard"
+    else
+        echo "rand: no clipboard tool found (tried pbcopy, xclip, wl-copy)" >&2
+        exit 1
+    fi
+else
+    echo "$random_str"
+fi
